@@ -13,6 +13,20 @@ Guidance for Codex agents and contributors working in this repository.
 - Students are expected to mainly edit: `src/content/portfolio.config.ts`.
 - Preserve that learning flow unless the task explicitly asks for structural changes.
 
+## Targeted Edit Playbook
+- Default to targeted edits in `src/content/portfolio.config.ts` before touching component files.
+- Use the quick-edit constants near the top of `src/content/portfolio.config.ts` first:
+	- `profile`: name, role, location, email, linkedin, social handle.
+	- `socialLinks`: public profile URLs.
+	- `themeColors`: global palette tokens.
+- Edit sections by request type:
+	- Personal info updates: `profile`, `site`, `person`, `seo.author`, hero `headingHighlight`.
+	- Contact/social updates: `profile.email`, `profile.linkedin`, `socialLinks`, contact block `contactItems`, footer `socialLinks`.
+	- Color/theme updates: `themeColors` first, then `src/styles.css` only if utility gradients/glows need hue alignment.
+	- Section text/content updates: only the matching object in `blocks` (keep each block `id` and `type` unchanged).
+- Avoid broad rewrites of all blocks when the user asks for a narrow change.
+- If uncertain, prefer a small, reversible config diff and report assumptions.
+
 ## Safe Change Rules
 - Edit only files needed to complete the request.
 - Prefer the smallest diff that solves the problem.

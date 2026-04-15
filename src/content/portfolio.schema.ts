@@ -37,7 +37,7 @@ const ThemeColorsSchema = z.record(
   z
     .string()
     .min(1, "Theme color key is required")
-    .regex(/^--?[a-z0-9-]+$/i, "Use CSS variable-like keys, e.g. background or --primary"),
+    .regex(/^(--)?[a-z0-9-]+$/i, "Use CSS variable-like keys, e.g. background or --primary"),
   z.string().min(1, "Theme color value is required"),
 );
 

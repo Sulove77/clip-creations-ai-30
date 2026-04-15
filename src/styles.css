@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -113,14 +112,14 @@
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, oklch(0.75 0.18 30) 0%, oklch(0.7 0.22 350) 50%, oklch(0.65 0.2 280) 100%);
+    background: linear-gradient(135deg, var(--color-coral) 0%, oklch(0.7 0.18 230) 55%, oklch(0.62 0.16 255) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-coral-gradient {
-    background: linear-gradient(135deg, var(--color-coral) 0%, oklch(0.72 0.2 350) 100%);
+    background: linear-gradient(135deg, var(--color-coral) 0%, oklch(0.7 0.16 225) 100%);
   }
 
   .glass {
@@ -153,24 +152,24 @@
   }
 
   .glow-coral {
-    box-shadow: 0 0 40px oklch(0.63 0.22 30 / 25%), 0 0 80px oklch(0.63 0.22 30 / 10%);
+    box-shadow: 0 0 40px oklch(0.62 0.19 245 / 25%), 0 0 80px oklch(0.62 0.19 245 / 10%);
   }
 
   .glow-coral-sm {
-    box-shadow: 0 0 20px oklch(0.63 0.22 30 / 15%);
+    box-shadow: 0 0 20px oklch(0.62 0.19 245 / 15%);
   }
 
   .bg-mesh {
     background-image:
-      radial-gradient(at 20% 20%, oklch(0.63 0.22 30 / 10%) 0%, transparent 50%),
-      radial-gradient(at 80% 80%, oklch(0.6 0.18 280 / 8%) 0%, transparent 50%),
-      radial-gradient(at 50% 50%, oklch(0.5 0.12 200 / 5%) 0%, transparent 50%);
+      radial-gradient(at 20% 20%, oklch(0.62 0.19 245 / 10%) 0%, transparent 50%),
+      radial-gradient(at 80% 80%, oklch(0.58 0.15 225 / 8%) 0%, transparent 50%),
+      radial-gradient(at 50% 50%, oklch(0.5 0.1 205 / 5%) 0%, transparent 50%);
   }
 
   .bg-mesh-alt {
     background-image:
-      radial-gradient(at 80% 20%, oklch(0.65 0.18 280 / 10%) 0%, transparent 50%),
-      radial-gradient(at 20% 80%, oklch(0.63 0.22 30 / 8%) 0%, transparent 50%);
+      radial-gradient(at 80% 20%, oklch(0.6 0.16 235 / 10%) 0%, transparent 50%),
+      radial-gradient(at 20% 80%, oklch(0.62 0.19 245 / 8%) 0%, transparent 50%);
   }
 
   .section-padding {
