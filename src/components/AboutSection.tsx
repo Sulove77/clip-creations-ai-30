@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
-import profilePhoto from "@/assets/sulove-profile.jpeg";
 
-const stats = [
-  { value: "5+", label: "Years Experience" },
-  { value: "50+", label: "Campaigns Launched" },
-  { value: "200%", label: "Avg. ROI Increase" },
-  { value: "15+", label: "Brands Served" },
-];
+import type { BlockConfig } from "@/content/portfolio.schema";
 
-export default function AboutSection() {
+type AboutBlock = Extract<BlockConfig, { type: "about" }>;
+
+type AboutSectionProps = {
+  block: AboutBlock;
+};
+
+export default function AboutSection({ block }: AboutSectionProps) {
   return (
     <section id="about" className="section-padding bg-mesh-alt relative overflow-hidden">
       <div className="absolute top-10 right-10 w-40 h-40 rounded-full bg-coral/6 blur-2xl animate-float-reverse" />
@@ -22,33 +22,33 @@ export default function AboutSection() {
           className="flex justify-center"
         >
           <div className="relative group">
-            {/* Decorative rotating border */}
             <div className="absolute -inset-3 rounded-3xl bg-coral-gradient opacity-30 blur-xl group-hover:opacity-50 transition-opacity duration-500 animate-pulse-glow" />
-            <div className="absolute -inset-1.5 rounded-3xl bg-coral-gradient opacity-20 animate-spin-slow" style={{ animationDuration: '8s' }} />
-            
-            {/* Glass frame */}
+            <div
+              className="absolute -inset-1.5 rounded-3xl bg-coral-gradient opacity-20 animate-spin-slow"
+              style={{ animationDuration: "8s" }}
+            />
+
             <div className="relative glass-card rounded-3xl p-3 hover:glow-coral-sm transition-all duration-500">
               <div className="overflow-hidden rounded-2xl">
                 <motion.img
-                  src={profilePhoto}
-                  alt="Sulove Shrestha - Senior Digital Marketing Officer"
+                  src={block.image.src}
+                  alt={block.image.alt}
                   loading="lazy"
-                  width={500}
-                  height={600}
+                  width={block.image.width ?? 500}
+                  height={block.image.height ?? 600}
                   className="w-full max-w-sm object-cover aspect-[4/5] grayscale-[20%] hover:grayscale-0 transition-all duration-700 hover:scale-105"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              
-              {/* Name tag */}
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className="absolute -bottom-4 left-1/2 -translate-x-1/2 glass-card px-5 py-2 rounded-full"
               >
-                <span className="text-sm font-semibold text-coral whitespace-nowrap">Sulove Shrestha</span>
+                <span className="text-sm font-semibold text-coral whitespace-nowrap">{block.nameTag}</span>
               </motion.div>
             </div>
           </div>
@@ -61,17 +61,20 @@ export default function AboutSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">
-            About <span className="text-gradient">Me</span>
+            {block.title} <span className="text-gradient">{block.titleHighlight}</span>
           </h2>
-          <p className="mt-5 text-muted-foreground leading-relaxed">
-            I'm a passionate digital marketing professional with expertise in crafting comprehensive marketing strategies. From SEO and content marketing to paid advertising and social media management, I bring a holistic approach to digital growth.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            My focus is on delivering data-driven results that make a real impact — growing audiences, increasing conversions, and building brand authority across all digital channels.
-          </p>
+
+          {block.paragraphs.map((paragraph, index) => (
+            <p
+              key={`${block.id}-paragraph-${index}`}
+              className={`${index === 0 ? "mt-5" : "mt-4"} text-muted-foreground leading-relaxed`}
+            >
+              {paragraph}
+            </p>
+          ))}
 
           <div className="mt-8 grid grid-cols-2 gap-4">
-            {stats.map((stat, i) => (
+            {block.stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}

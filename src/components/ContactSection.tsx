@@ -1,11 +1,67 @@
 import { motion } from "framer-motion";
-import contactClipart from "@/assets/contact-clipart.png";
+import { FormEvent, useState } from "react";
 
-export default function ContactSection() {
+import type { BlockConfig } from "@/content/portfolio.schema";
+
+type ContactBlock = Extract<BlockConfig, { type: "contact" }>;
+
+type ContactSectionProps = {
+  block: ContactBlock;
+};
+
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
+export default function ContactSection({ block }: ContactSectionProps) {
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [feedbackMessage, setFeedbackMessage] = useState<string>("");
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitState("submitting");
+    setFeedbackMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      message: String(formData.get("message") ?? "").trim(),
+      website: String(formData.get("website") ?? "").trim(),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await response.json()) as { ok: boolean; error?: string };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || block.errorMessage);
+      }
+
+      setSubmitState("success");
+      setFeedbackMessage(block.successMessage);
+      form.reset();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : block.errorMessage;
+      setSubmitState("error");
+      setFeedbackMessage(message);
+    }
+  };
+
   return (
     <section id="contact" className="section-padding relative overflow-hidden">
       <div className="absolute top-10 right-10 w-72 h-72 rounded-full bg-coral/8 blur-3xl animate-pulse-glow" />
-      <div className="absolute bottom-10 left-10 w-60 h-60 rounded-full bg-accent/8 blur-3xl animate-pulse-glow" style={{ animationDelay: "2s" }} />
+      <div
+        className="absolute bottom-10 left-10 w-60 h-60 rounded-full bg-accent/8 blur-3xl animate-pulse-glow"
+        style={{ animationDelay: "2s" }}
+      />
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center relative z-10">
         <motion.div
@@ -15,18 +71,12 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">
-            Let's <span className="text-gradient">Talk</span>
+            {block.title} <span className="text-gradient">{block.titleHighlight}</span>
           </h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Ready to elevate your digital presence? Let's discuss how I can help grow your brand with strategic marketing.
-          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">{block.subtitle}</p>
 
           <div className="mt-8 space-y-5">
-            {[
-              { icon: "✉️", label: "Email", value: "sulove.shrest07@gmail.com" },
-              { icon: "📍", label: "Location", value: "Nepal" },
-              { icon: "🔗", label: "LinkedIn", value: "linkedin.com/in/suloveshrestha" },
-            ].map((item, i) => (
+            {block.contactItems.map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, x: -20 }}
@@ -44,7 +94,18 @@ export default function ContactSection() {
                 </motion.div>
                 <div>
                   <div className="text-sm text-muted-foreground">{item.label}</div>
-                  <div className="font-medium text-foreground">{item.value}</div>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
+                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                      className="font-medium text-foreground hover:text-coral transition-colors"
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <div className="font-medium text-foreground">{item.value}</div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -60,11 +121,11 @@ export default function ContactSection() {
         >
           <div className="animate-float">
             <img
-              src={contactClipart}
-              alt="Contact and communication illustration"
+              src={block.image.src}
+              alt={block.image.alt}
               loading="lazy"
-              width={800}
-              height={800}
+              width={block.image.width ?? 800}
+              height={block.image.height ?? 800}
               className="w-full max-w-xs"
             />
           </div>
@@ -76,32 +137,59 @@ export default function ContactSection() {
             whileHover={{ scale: 1.01 }}
             className="glass-card rounded-2xl p-6 w-full hover:glow-coral-sm transition-shadow duration-500"
           >
-            <h3 className="font-display font-bold text-foreground mb-4">Send a Message</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <h3 className="font-display font-bold text-foreground mb-4">{block.cardTitle}</h3>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <input
                 type="text"
+                name="name"
                 placeholder="Your Name"
+                required
                 className="w-full px-4 py-3 rounded-xl glass-input text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-coral transition-all duration-300"
               />
               <input
                 type="email"
+                name="email"
                 placeholder="Your Email"
+                required
                 className="w-full px-4 py-3 rounded-xl glass-input text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-coral transition-all duration-300"
               />
               <textarea
+                name="message"
                 placeholder="Your Message"
                 rows={4}
+                required
                 className="w-full px-4 py-3 rounded-xl glass-input text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-coral resize-none transition-all duration-300"
               />
+
+              <input
+                type="text"
+                name="website"
+                autoComplete="off"
+                tabIndex={-1}
+                className="hidden"
+                aria-hidden="true"
+              />
+
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-coral-gradient text-coral-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity glow-coral"
+                disabled={submitState === "submitting"}
+                whileHover={{ scale: submitState === "submitting" ? 1 : 1.02 }}
+                whileTap={{ scale: submitState === "submitting" ? 1 : 0.98 }}
+                className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-colors glow-coral disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Send Message
+                {submitState === "submitting" ? "Sending..." : block.submitLabel}
               </motion.button>
             </form>
+
+            {feedbackMessage ? (
+              <p
+                className={`mt-3 text-sm ${
+                  submitState === "success" ? "text-primary" : "text-destructive"
+                }`}
+              >
+                {feedbackMessage}
+              </p>
+            ) : null}
           </motion.div>
         </motion.div>
       </div>

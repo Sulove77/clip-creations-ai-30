@@ -1,12 +1,21 @@
 import { motion } from "framer-motion";
-import heroClipart from "@/assets/hero-clipart.png";
 
-export default function HeroSection() {
+import type { BlockConfig } from "@/content/portfolio.schema";
+
+type HeroBlock = Extract<BlockConfig, { type: "hero" }>;
+
+type HeroSectionProps = {
+  block: HeroBlock;
+};
+
+export default function HeroSection({ block }: HeroSectionProps) {
   return (
     <section className="min-h-screen flex items-center section-padding pt-28 bg-mesh relative overflow-hidden">
-      {/* Animated floating glass orbs */}
       <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-coral/10 blur-3xl animate-pulse-glow" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent/8 blur-3xl animate-pulse-glow" style={{ animationDelay: "2s" }} />
+      <div
+        className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent/8 blur-3xl animate-pulse-glow"
+        style={{ animationDelay: "2s" }}
+      />
       <div className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full bg-coral/5 blur-2xl animate-float-slow" />
 
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
@@ -21,7 +30,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="inline-block glass-card text-coral text-sm font-semibold px-4 py-1.5 rounded-full mb-6"
           >
-            Senior Digital Marketing Officer
+            {block.badge}
           </motion.span>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight tracking-tight font-display">
             <motion.span
@@ -30,7 +39,7 @@ export default function HeroSection() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="block"
             >
-              Hi, I'm
+              {block.headingPrefix}
             </motion.span>
             <motion.span
               initial={{ opacity: 0, y: 20 }}
@@ -38,7 +47,7 @@ export default function HeroSection() {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="text-gradient block"
             >
-              Sulove Shrestha
+              {block.headingHighlight}
             </motion.span>
           </h1>
           <motion.p
@@ -47,7 +56,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.8 }}
             className="mt-6 text-muted-foreground text-lg leading-relaxed max-w-lg"
           >
-            I craft data-driven marketing campaigns that transform brands, boost engagement, and deliver measurable results across digital channels.
+            {block.description}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -56,16 +65,16 @@ export default function HeroSection() {
             className="mt-8 flex flex-wrap gap-4"
           >
             <a
-              href="#contact"
-              className="bg-coral-gradient text-coral-foreground px-7 py-3.5 rounded-xl font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all duration-300 glow-coral"
+              href={block.primaryCta.href}
+              className="bg-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold text-sm hover:bg-primary/90 hover:scale-105 transition-all duration-300 glow-coral"
             >
-              Let's Connect
+              {block.primaryCta.label}
             </a>
             <a
-              href="#services"
+              href={block.secondaryCta.href}
               className="glass-card text-foreground px-7 py-3.5 rounded-xl font-semibold text-sm hover:bg-input hover:scale-105 transition-all duration-300"
             >
-              View Services
+              {block.secondaryCta.label}
             </a>
           </motion.div>
         </motion.div>
@@ -79,10 +88,10 @@ export default function HeroSection() {
           <div className="relative animate-float">
             <div className="absolute inset-0 rounded-3xl bg-coral/10 blur-2xl scale-90 animate-pulse-glow" />
             <img
-              src={heroClipart}
-              alt="Digital marketing professional with social media and analytics icons"
-              width={1024}
-              height={1024}
+              src={block.image.src}
+              alt={block.image.alt}
+              width={block.image.width ?? 1024}
+              height={block.image.height ?? 1024}
               className="w-full max-w-md md:max-w-lg relative z-10"
             />
           </div>

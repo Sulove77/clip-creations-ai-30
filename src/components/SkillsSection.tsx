@@ -1,18 +1,14 @@
 import { motion } from "framer-motion";
-import skillsClipart from "@/assets/skills-clipart.png";
 
-const skills = [
-  { name: "SEO & SEM", level: 95 },
-  { name: "Social Media Marketing", level: 90 },
-  { name: "Content Strategy", level: 88 },
-  { name: "Google Ads & PPC", level: 92 },
-  { name: "Email Marketing", level: 85 },
-  { name: "Analytics & Data", level: 90 },
-  { name: "Brand Strategy", level: 87 },
-  { name: "Marketing Automation", level: 82 },
-];
+import type { BlockConfig } from "@/content/portfolio.schema";
 
-export default function SkillsSection() {
+type SkillsBlock = Extract<BlockConfig, { type: "skills" }>;
+
+type SkillsSectionProps = {
+  block: SkillsBlock;
+};
+
+export default function SkillsSection({ block }: SkillsSectionProps) {
   return (
     <section id="skills" className="section-padding relative overflow-hidden">
       <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-coral/8 blur-3xl animate-pulse-glow" />
@@ -26,11 +22,9 @@ export default function SkillsSection() {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">
-            My <span className="text-gradient">Skills</span>
+            {block.title} <span className="text-gradient">{block.titleHighlight}</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-            A comprehensive toolkit built from years of hands-on digital marketing experience.
-          </p>
+          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">{block.subtitle}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -41,7 +35,7 @@ export default function SkillsSection() {
             transition={{ duration: 0.5 }}
             className="glass-card rounded-2xl p-8 space-y-5"
           >
-            {skills.map((skill, i) => (
+            {block.items.map((skill, i) => (
               <motion.div
                 key={skill.name}
                 initial={{ opacity: 0, x: -20 }}
@@ -83,11 +77,11 @@ export default function SkillsSection() {
           >
             <div className="animate-float">
               <img
-                src={skillsClipart}
-                alt="Achievement and skills illustration"
+                src={block.image.src}
+                alt={block.image.alt}
                 loading="lazy"
-                width={800}
-                height={800}
+                width={block.image.width ?? 800}
+                height={block.image.height ?? 800}
                 className="w-full max-w-sm"
               />
             </div>

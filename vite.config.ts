@@ -6,4 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+const siteBasePath = process.env.SITE_BASE_PATH || "/";
+
+export default defineConfig({
+	vite: {
+		base: siteBasePath,
+	},
+});

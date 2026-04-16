@@ -1,33 +1,14 @@
 import { motion } from "framer-motion";
 
-const timeline = [
-  {
-    year: "2023 – Present",
-    role: "Senior Digital Marketing Officer",
-    company: "Sulove Shrestha — Freelance",
-    desc: "Leading digital strategy, managing multi-channel campaigns, and driving 200%+ ROI across paid and organic channels.",
-  },
-  {
-    year: "2021 – 2023",
-    role: "Digital Marketing Specialist",
-    company: "Marketing Agency",
-    desc: "Managed SEO, social media, and content strategies that increased organic traffic by 150% and engagement by 300%.",
-  },
-  {
-    year: "2019 – 2021",
-    role: "Marketing Coordinator",
-    company: "Digital Agency",
-    desc: "Coordinated campaign execution across multiple clients, specializing in PPC and email marketing automation.",
-  },
-  {
-    year: "2018 – 2019",
-    role: "Marketing Intern",
-    company: "Startup Studio",
-    desc: "Supported social media management and content creation for early-stage startups.",
-  },
-];
+import type { BlockConfig } from "@/content/portfolio.schema";
 
-export default function ExperienceSection() {
+type ExperienceBlock = Extract<BlockConfig, { type: "experience" }>;
+
+type ExperienceSectionProps = {
+  block: ExperienceBlock;
+};
+
+export default function ExperienceSection({ block }: ExperienceSectionProps) {
   return (
     <section id="experience" className="section-padding bg-mesh-alt relative overflow-hidden">
       <div className="absolute top-20 left-10 w-60 h-60 rounded-full bg-accent/6 blur-2xl animate-float-reverse" />
@@ -40,11 +21,9 @@ export default function ExperienceSection() {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">
-            My <span className="text-gradient">Journey</span>
+            {block.title} <span className="text-gradient">{block.titleHighlight}</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-            A track record of growing brands through digital excellence.
-          </p>
+          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">{block.subtitle}</p>
         </motion.div>
 
         <div className="relative">
@@ -56,9 +35,9 @@ export default function ExperienceSection() {
             className="absolute left-4 md:left-1/2 top-0 w-px bg-border md:-translate-x-px origin-top"
           />
 
-          {timeline.map((item, i) => (
+          {block.items.map((item, i) => (
             <motion.div
-              key={item.year}
+              key={`${item.year}-${item.role}`}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -67,7 +46,11 @@ export default function ExperienceSection() {
                 i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
               }`}
             >
-              <div className={`md:w-1/2 ${i % 2 === 0 ? "md:text-right md:pr-10" : "md:text-left md:pl-10"} pl-10 md:pl-0`}>
+              <div
+                className={`md:w-1/2 ${
+                  i % 2 === 0 ? "md:text-right md:pr-10" : "md:text-left md:pl-10"
+                } pl-10 md:pl-0`}
+              >
                 <motion.div
                   whileHover={{ scale: 1.03, y: -3 }}
                   transition={{ type: "spring", stiffness: 200 }}

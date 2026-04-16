@@ -1,0 +1,12 @@
+- generic [ref=e2]:
+  - text: "Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/neko/projects/git_basics/site/clip-creations-ai-30/dist/server/server.js' imported from /Users/neko/projects/git_basics/site/clip-creations-ai-30/node_modules/.pnpm/@tanstack+start-plugin-core@1.167.35_@tanstack+react-router@1.168.22_react-dom@19.2.5_r_e17bce9c2f890f58e1719f5791b6b4e8/node_modules/@tanstack/start-plugin-core/dist/esm/vite/preview-server-plugin/plugin.js"
+  - text: at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+  - text: at moduleResolve (node:internal/modules/esm/resolve:861:10)
+  - text: at defaultResolve (node:internal/modules/esm/resolve:988:11)
+  - text: at nextResolve (node:internal/modules/esm/hooks:769:28)
+  - text: at o (file:///Users/neko/projects/git_basics/site/clip-creations-ai-30/node_modules/.pnpm/@tailwindcss+node@4.2.2/node_modules/@tailwindcss/node/dist/esm-cache.loader.mjs:1:69)
+  - text: at nextResolve (node:internal/modules/esm/hooks:769:28)
+  - text: at AsyncLoaderHooksOnLoaderHookWorker.resolve (node:internal/modules/esm/hooks:265:30)
+  - text: at MessagePort.handleMessage (node:internal/modules/esm/worker:251:24)
+  - text: at [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+  - text: at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)

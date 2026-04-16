@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Services", href: "#services" },
-  { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
-];
+import type { PortfolioConfig } from "@/content/portfolio.schema";
 
-export default function Navbar() {
+type NavbarProps = {
+  nav: PortfolioConfig["nav"];
+};
+
+export default function Navbar({ nav }: NavbarProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -21,17 +19,20 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
         <motion.a
-          href="#"
+          href={nav.brand.href}
           whileHover={{ scale: 1.05 }}
           className="font-display text-xl font-bold text-foreground tracking-tight"
         >
-          Sulove<span className="text-coral">.</span>
+          {nav.brand.text}
+          {nav.brand.accentText ? (
+            <span className="text-coral">{nav.brand.accentText}</span>
+          ) : null}
         </motion.a>
 
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, i) => (
+          {nav.links.map((link, i) => (
             <motion.a
-              key={link.href}
+              key={`${link.href}-${i}`}
               href={link.href}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -42,17 +43,19 @@ export default function Navbar() {
               {link.label}
             </motion.a>
           ))}
-          <motion.a
-            href="#contact"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-coral-gradient text-coral-foreground px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity glow-coral-sm"
-          >
-            Hire Me
-          </motion.a>
+          {nav.cta ? (
+            <motion.a
+              href={nav.cta.href}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-primary text-primary-foreground px-5 py-2 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors glow-coral-sm"
+            >
+              {nav.cta.label}
+            </motion.a>
+          ) : null}
         </div>
 
         <button
@@ -60,7 +63,14 @@ export default function Navbar() {
           className="md:hidden text-foreground"
           aria-label="Toggle menu"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             {open ? (
               <path d="M18 6L6 18M6 6l12 12" />
             ) : (
@@ -71,7 +81,7 @@ export default function Navbar() {
       </div>
 
       <AnimatePresence>
-        {open && (
+        {open ? (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -79,9 +89,9 @@ export default function Navbar() {
             className="md:hidden overflow-hidden glass-strong"
           >
             <div className="px-6 py-4 flex flex-col gap-4">
-              {navLinks.map((link, i) => (
+              {nav.links.map((link, i) => (
                 <motion.a
-                  key={link.href}
+                  key={`${link.href}-mobile-${i}`}
                   href={link.href}
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, x: -20 }}
@@ -92,16 +102,18 @@ export default function Navbar() {
                   {link.label}
                 </motion.a>
               ))}
-              <a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                className="bg-coral-gradient text-coral-foreground px-5 py-2 rounded-xl text-sm font-semibold text-center hover:opacity-90 transition-opacity"
-              >
-                Hire Me
-              </a>
+              {nav.cta ? (
+                <a
+                  href={nav.cta.href}
+                  onClick={() => setOpen(false)}
+                  className="bg-primary text-primary-foreground px-5 py-2 rounded-xl text-sm font-semibold text-center hover:bg-primary/90 transition-colors"
+                >
+                  {nav.cta.label}
+                </a>
+              ) : null}
             </div>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </motion.nav>
   );
