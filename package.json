@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:vercel": "pnpm build && node scripts/generate-client-index.mjs",
+    "build:pages": "pnpm build && node scripts/generate-client-index.mjs",
+    "build:vercel": "pnpm build:pages",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint ."

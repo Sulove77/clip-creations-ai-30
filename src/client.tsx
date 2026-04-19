@@ -7,13 +7,7 @@ import { getRouter } from "./router";
 async function startApp() {
   const router = getRouter();
 
-  // Load initial route state before first paint in pure SPA static hosting.
-  await router.load();
-
-  const container = document.getElementById("root");
-  if (!container) {
-    throw new Error("Could not find root element");
-  }
+  const container = document;
 
   startTransition(() => {
     createRoot(container).render(
@@ -22,6 +16,9 @@ async function startApp() {
       </StrictMode>,
     );
   });
+
+  // Keep route loading non-blocking so first paint is not delayed.
+  void router.load();
 }
 
 void startApp();

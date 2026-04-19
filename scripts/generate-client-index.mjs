@@ -74,7 +74,6 @@ const html = `<!doctype html>
     <link rel="stylesheet" href="${basePath}assets/${cssFile}" />
   </head>
   <body>
-    <div id="root"></div>
     <script type="module" src="${basePath}assets/${jsFile}"></script>
   </body>
 </html>

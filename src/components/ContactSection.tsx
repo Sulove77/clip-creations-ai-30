@@ -30,8 +30,18 @@ export default function ContactSection({ block }: ContactSectionProps) {
       website: String(formData.get("website") ?? "").trim(),
     };
 
+    const configuredEndpoint = String(import.meta.env.VITE_CONTACT_ENDPOINT ?? "").trim();
+    const isGithubPagesHost = window.location.hostname.endsWith("github.io");
+    const endpoint = configuredEndpoint || "/api/contact";
+
     try {
-      const response = await fetch("/api/contact", {
+      if (isGithubPagesHost && !configuredEndpoint) {
+        throw new Error(
+          "Contact form is not available on GitHub Pages by default. Deploy the API on Vercel and set VITE_CONTACT_ENDPOINT to that /api/contact URL.",
+        );
+      }
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +49,9 @@ export default function ContactSection({ block }: ContactSectionProps) {
         body: JSON.stringify(payload),
       });
 
-      const result = (await response.json()) as { ok: boolean; error?: string };
+      const result =
+        ((await response.json().catch(() => null)) as { ok: boolean; error?: string } | null) ??
+        { ok: response.ok };
 
       if (!response.ok || !result.ok) {
         throw new Error(result.error || block.errorMessage);
