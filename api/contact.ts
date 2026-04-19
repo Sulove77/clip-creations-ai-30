@@ -84,11 +84,7 @@ function buildPublicErrorMessage(error: unknown): string {
   }
 
   if (error.message.startsWith("Missing required environment variable:")) {
-    return "Contact service setup is incomplete. Set SMTP and CONTACT_TO_EMAIL vars in Vercel (Preview and Production), then redeploy.";
-  }
-
-  if (error.message.includes("CONTACT_TO_EMAIL must be a valid email")) {
-    return "CONTACT_TO_EMAIL is invalid. Set a real receiving email in Vercel env vars and redeploy.";
+    return "Contact service setup is incomplete. Set SMTP vars in Vercel (Preview and Production), then redeploy.";
   }
 
   const maybeCode = (error as { code?: string }).code;
@@ -146,11 +142,11 @@ export default async function handler(req: any, res: any) {
     const portRaw = getRequiredEnv("SMTP_PORT");
     const user = getRequiredEnv("SMTP_USER");
     const pass = normalizeSmtpPassword(getRequiredEnv("SMTP_PASS"));
-    const contactToEmail = getRequiredEnv("CONTACT_TO_EMAIL");
     const senderName = process.env.SITE_NAME || "Portfolio";
+    const contactToEmail = parsed.data.email;
 
     if (!EmailSchema.safeParse(contactToEmail).success) {
-      throw new Error("CONTACT_TO_EMAIL must be a valid email");
+      throw new Error("Submitted email must be a valid email");
     }
 
     const port = Number(portRaw);
@@ -170,27 +166,17 @@ export default async function handler(req: any, res: any) {
     });
 
     await transporter.sendMail({
-      from: `${senderName} Contact <${user}>`,
-      to: contactToEmail,
-      replyTo: parsed.data.email,
-      subject: `New portfolio message from ${parsed.data.name}`,
-      text: [
-        `Name: ${parsed.data.name}`,
-        `Email: ${parsed.data.email}`,
-        "",
-        parsed.data.message,
-      ].join("\n"),
-    });
-
-    await transporter.sendMail({
       from: `${senderName} <${user}>`,
-      to: parsed.data.email,
+      to: contactToEmail,
       subject: "Thank you for your message",
       text: [
         `Hello ${parsed.data.name},`,
         "",
         `Thank you for reaching out to ${senderName}.`,
         "I have received your query and will get back to you soon.",
+        "",
+        "Here is a copy of your message:",
+        parsed.data.message,
         "",
         "Best regards,",
         senderName,

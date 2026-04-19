@@ -10,6 +10,8 @@ const ContactPayloadSchema = z.object({
   website: z.string().optional(),
 });
 
+const EmailSchema = z.string().trim().email();
+
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 
@@ -118,7 +120,11 @@ export const Route = createFileRoute("/api/contact")({
           const portRaw = getRequiredEnv("SMTP_PORT");
           const user = getRequiredEnv("SMTP_USER");
           const pass = getRequiredEnv("SMTP_PASS");
-          const contactToEmail = getRequiredEnv("CONTACT_TO_EMAIL");
+          const contactToEmail = parsed.data.email;
+
+          if (!EmailSchema.safeParse(contactToEmail).success) {
+            throw new Error("Submitted email must be a valid email");
+          }
 
           const port = Number(portRaw);
 
@@ -137,27 +143,17 @@ export const Route = createFileRoute("/api/contact")({
           });
 
           await transporter.sendMail({
-            from: `${senderName} Contact <${user}>`,
-            to: contactToEmail,
-            replyTo: parsed.data.email,
-            subject: `New portfolio message from ${parsed.data.name}`,
-            text: [
-              `Name: ${parsed.data.name}`,
-              `Email: ${parsed.data.email}`,
-              "",
-              parsed.data.message,
-            ].join("\n"),
-          });
-
-          await transporter.sendMail({
             from: `${senderName} <${user}>`,
-            to: parsed.data.email,
+            to: contactToEmail,
             subject: "Thank you for your message",
             text: [
               `Hello ${parsed.data.name},`,
               "",
               `Thank you for reaching out to ${senderName}.`,
               "I have received your query and will get back to you soon.",
+              "",
+              "Here is a copy of your message:",
+              parsed.data.message,
               "",
               "Best regards,",
               senderName,

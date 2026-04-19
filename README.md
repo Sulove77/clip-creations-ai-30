@@ -33,7 +33,8 @@ Set environment variables before running:
 - `SMTP_PORT`
 - `SMTP_USER`
 - `SMTP_PASS`
-- `CONTACT_TO_EMAIL`
+
+The confirmation email recipient is read from the submitted contact form email field.
 
 For Vercel deployments, set these env vars for both Preview and Production environments,
 then redeploy after any change.
@@ -51,7 +52,7 @@ Recommended Gmail setup:
 | --- | --- | --- |
 | Config error panel appears | Schema validation failed | Correct the field shown in the error table |
 | Contact form returns error | Missing/invalid SMTP env vars | Set all required SMTP variables |
-| Contact form sends but no email received | `CONTACT_TO_EMAIL` is incorrect or filtered | Verify destination inbox and spam folder |
+| Contact form sends but no email received | Submitted email is wrong or filtered | Verify the entered email address and spam folder |
 | Too many requests error | Rate limiter triggered | Wait 10 minutes and retry |
 | A section is missing | Block removed from `blocks` array | Add the block back with a valid `type` |
 
