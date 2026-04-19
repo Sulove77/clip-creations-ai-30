@@ -41,15 +41,7 @@ jobs:
       - name: Build site
         env:
           SITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: pnpm build
-
-      - name: Generate index.html for Pages
-        env:
-          SITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: node scripts/generate-client-index.mjs
-
-      - name: Add SPA fallback
-        run: cp dist/client/index.html dist/client/404.html
+        run: pnpm build:pages
 
       - name: Disable Jekyll processing
         run: touch dist/client/.nojekyll

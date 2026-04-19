@@ -7,9 +7,6 @@ import { getRouter } from "./router";
 async function startApp() {
   const router = getRouter();
 
-  // Load initial route state before first paint in pure SPA static hosting.
-  await router.load();
-
   const container = document;
 
   startTransition(() => {
@@ -19,6 +16,9 @@ async function startApp() {
       </StrictMode>,
     );
   });
+
+  // Keep route loading non-blocking so first paint is not delayed.
+  void router.load();
 }
 
 void startApp();

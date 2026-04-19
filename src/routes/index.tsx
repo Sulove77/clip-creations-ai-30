@@ -18,9 +18,9 @@ const defaultHead = {
   author: "Portfolio Owner",
 };
 
-const parsedConfigForHead = validatePortfolioConfig();
-const headMeta = parsedConfigForHead.ok
-  ? parsedConfigForHead.data.seo
+const parsedConfig = validatePortfolioConfig();
+const headMeta = parsedConfig.ok
+  ? parsedConfig.data.seo
   : defaultHead;
 
 export const Route = createFileRoute("/")({
@@ -85,13 +85,11 @@ function renderBlock(block: BlockConfig, config: PortfolioConfig): JSX.Element {
 }
 
 function Index() {
-  const parsed = validatePortfolioConfig();
-
-  if (!parsed.ok) {
-    return <ConfigErrorPanel issues={parsed.issues} />;
+  if (!parsedConfig.ok) {
+    return <ConfigErrorPanel issues={parsedConfig.issues} />;
   }
 
-  const config = parsed.data;
+  const config = parsedConfig.data;
 
   return (
     <div className="min-h-screen">

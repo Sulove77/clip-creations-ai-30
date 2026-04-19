@@ -6,6 +6,10 @@
   "outputDirectory": "dist/client",
   "rewrites": [
     {
+      "source": "/favicon.ico",
+      "destination": "/placeholder.svg"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
